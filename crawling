@@ -22,3 +22,110 @@ options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)
 df_load = pd.read_excel('./데이터셋/통합의약품.xlsx')
 
 search_data = list(df_load['제품코드'])
+
+# 브라우저 열기
+driver = webdriver.Chrome()
+
+# 사이트 열기
+driver.get("https://www.druginfo.co.kr/")
+
+id = 'kmfm10m'
+pw = 'rlashdk12!'
+
+driver.find_element(By.NAME,'id').send_keys(f'{id}')
+driver.find_element(By.NAME,'t_passwd').send_keys(f'{pw}')
+
+# 로그인 버튼 클릭 → 로그인 페이지로 이동
+login_button = driver.find_element(By.XPATH, "/html/body/table/tbody/tr/td[3]/table/tbody/tr[5]/td/table/tbody/tr/td[3]/table/tbody/tr/td/form/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/input")
+login_button.click()
+
+time.sleep(3)  # 로딩 대기
+
+
+# 크롤링 후 필요한 텍스트만 추출
+def extract_between(text, start_kw, end_kw):
+    start_idx = text.find(start_kw)
+    end_idx = text.find(end_kw)
+
+    if start_idx == -1 or end_idx == -1 or end_idx <= start_idx:
+        return None
+
+    return text[start_idx + len(start_kw):end_idx].strip()
+
+# 예외처리
+def extract_section_with_fallback(text, start_kw, primary_end_kw, fallback_end_kws):
+    # 1차 시도: 기본 종료 키워드
+    result = extract_between(text, start_kw, primary_end_kw)
+    if result:
+        return result
+    
+    # 2차 시도: 대체 종료 키워드 중 하나
+    for end_kw in fallback_end_kws:
+        result = extract_between(text, start_kw, end_kw)
+        if result:
+            return result
+    return None
+
+def make_df(search):
+    df = pd.DataFrame(columns=['제품코드','BIT 약효 분류','효능효과','용법용량',"URL"])
+    
+    for i in search:
+        # 리스트에 있는 항목들 텍스트 박스에 입력
+        driver.find_element(By.ID,'suggestKeyword').send_keys(f'{i}')
+        
+        # 검색 버튼 클릭
+        search_button = driver.find_element(By.XPATH, "/html/body/table/tbody/tr/td[3]/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr/td[2]/table/tbody/tr/td/form/table/tbody/tr[1]/td[2]/input")
+        search_button.click()
+
+        # 로딩 대기
+        time.sleep(random.randint(1, 4))
+        
+        # 최상위 제품 선택
+        info_button = driver.find_element(By.XPATH,"/html/body/table/tbody/tr[5]/td/table/tbody/tr/td[4]/table/tbody/tr[5]/td/div/div[4]/table/tbody/tr[2]/td[2]/a")
+        info_button.click()
+        
+        # 로딩 대기
+        time.sleep(random.randint(1, 4))
+        
+        src = ""
+        try:
+            # 사진 url찾기
+            image_url = driver.find_element(By.XPATH,"//img[@alt='약품사진']")
+            src = image_url.get_attribute("src")
+        except:
+            print(f"{i}")
+            pass
+        
+        # BIT 찾기
+        info_BIT = driver.find_elements(By.CLASS_NAME,"t_td6")
+        text_BIT = info_BIT[4].text
+        
+        # 모든 table 가져오기
+        body_text = driver.find_element(By.TAG_NAME, "body").text
+        
+        # 효능효과: "[적응증 별 검색]" 다음 줄
+        efficacy = extract_section_with_fallback(
+            body_text,
+            "[적응증 별 검색]",
+            "1일 최대 투여량",
+            ["[적응증 별 검색]", "\n용법용량"]
+        )
+
+        # 용법용량: "[처방약어]" ~ "[BMI지수 계산]"
+        dosage = extract_between(body_text, "[처방약어]", "[BMI지수 계산]")
+        
+        df.loc[len(df)] = [i,text_BIT,efficacy,dosage]
+        
+        # 초기 화면으로 돌아가기
+        home_iamge = driver.find_element(By.XPATH,'/html/body/table/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr/td[1]/a/img')
+        home_iamge.click()
+        
+        # df 에 저장
+        df.loc[len(df)] = [i,text_BIT,efficacy,dosage,src]
+
+        # 로딩 대기
+        time.sleep(random.randint(1, 4))
+    
+    return df
+
+data = df.to_csv('crwaling.csv', index=False, encoding='utf-8-sig')
