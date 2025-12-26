@@ -25,7 +25,7 @@
 
 - 불충분한 의료 경험의 이유는 다음과 같이 나타났다.
 
-![image01.png](image/3.png)
+![의료 경험](image/3.png)
 
 외국인들의 주된 치료 방법은 정기적인 약물 복용(33%)이 가장 높은 비율로 나타났다.
 
@@ -33,7 +33,7 @@
 
 ### MVP 설정
 
-![image.png](image/4.png)
+![MVP](image/4.png)
 
 1. 주요 기능
 - 증상별 일반의약품 추천 챗봇
@@ -63,7 +63,7 @@
 
 ### 데이터셋 및 DB 설계
 
-![mediport (3).png](image/5.png)
+![ERD](image/5.png)
 
 > 필요 데이터셋 정의
 > 
@@ -140,11 +140,11 @@
 > ATC 코드 매핑
 > 
 
-![48.png](image/6.png)
+![ATC 코드 매핑](image/6.png)
 
 1. 국제질병분류체계를 활용하여 해외 약의 증상에 따른 약효에 따라 ATC코드 매핑
 
-![image.png](image/7.png)
+![약품 필터링](image/7.png)
 
 1. 질병을 분류한 상태에서 동일한 주성분을 가지는 약품 매핑
 2. 사용자가 니즈에 따라 브랜드/용량/제형을 출력하고 선택
@@ -152,7 +152,7 @@
 > 최종결과
 > 
 
-![49.png](image/8.png)
+![계층형 DB](image/8.png)
 
 - 약품 직접 추천보다 소거법(Filtering)을 통하여 조건에 맞지 않는 약품을 제외함으로써 마지막 단계에서 사용자 선택을 통해 좀 더 정확한 약품 추천 과정을 수행
 - Filtering을 통해 HDBMS 같은 분류에 따른 트리 구조로 설계, DB 구조변경(국가 추가 등)을 고려하여 계층형 DB보다 level 별 Depth를 가지는 관계형 DBMS로 설계
@@ -168,7 +168,7 @@
 
 </aside>
 
-![데이터파이프라인.png](image/9.png)
+![데이터파이프라인](image/9.png)
 
 MySQL: 관계형 DBMS를 통해 안정적인 구조화 저장을 구현
 
@@ -181,7 +181,7 @@ FAISS: 벡터 DBMS를 통해 빠르고 효율적인 검색을 가능
 > 시장 분석
 > 
 
-![image.png](image/10.png)
+![시장 분석](image/10.png)
 
 > 서비스 성과
 > 
@@ -190,12 +190,33 @@ FAISS: 벡터 DBMS를 통해 빠르고 효율적인 검색을 가능
     - 대상: 국내 지방 거주 외국인 200명
     - 설문 방법: 대면 설문 30명, 외국인 밀집 카페 이용
 
-![image.png](image/11.png)
+![NPS](image/11.png)
 
 - 생활 밀접형 어플과의 유사 점수를 기록
 
 ### 결과물
 
-![image.png](image/12.png)
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="image/12.png"><br>
+      <small>결과물</small>
+</table>
 
-https://youtu.be/LrSbz9DLeaM
+<table align="center">
+  <tr>
+    <td align="center">
+      <a href="https://www.youtube.com/watch?v=LrSbz9DLeaM" target="_blank" rel="noopener noreferrer">
+        <img src="image/thumbnail.png" alt="Demo Video Thumbnail" width="450">
+      </a>
+      <br><br>
+      <sub><b>🎥 Demo Video</b></sub>
+      <br>
+      <sub>
+        <a href="https://www.youtube.com/watch?v=LrSbz9DLeaM" target="_blank" rel="noopener noreferrer">
+          시연영상
+        </a>
+      </sub>
+    </td>
+  </tr>
+</table>
