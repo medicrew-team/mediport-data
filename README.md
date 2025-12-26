@@ -1,5 +1,10 @@
-# MediPort Data
-![메인화면.png](attachment:7648a4d8-2bd5-4f0c-8135-057774b8b5a6:메인화면.png)
+# MediPort 데이터 파트
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="image/1.png" width="200"><br>
+      <small>메인 화면</small>
+</table>
 
 ### 프로젝트 개요
 
@@ -16,7 +21,7 @@
 - 최근 외국인 국내 유입 증가로 외국인의 지역 정착 유도가 주목받고 있다.
 - 정착 의사에 가장 큰 영향을 미치는 요인은 ‘불충분한 의료 경험’으로 나타났다.
 
-![image.png](attachment:578b2891-2331-46d4-a219-a82b27ece0e7:image.png)
+![오즈비](image/2.png)
 
 - 불충분한 의료 경험의 이유는 다음과 같이 나타났다.
 
